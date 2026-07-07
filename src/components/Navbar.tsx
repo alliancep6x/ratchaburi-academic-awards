@@ -12,14 +12,14 @@ export default function Navbar() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-midnight/80 backdrop-blur-2xl">
-      <nav className="section-shell flex h-20 items-center justify-between gap-4">
-        <a href="#" className="flex min-w-0 items-center gap-3">
-          <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border border-gold-light/50 bg-white shadow-glow">
-            <Image src="/images/education-office-logo.jpg" alt="โลโก้สำนักการศึกษา เทศบาลเมืองราชบุรี" fill sizes="48px" className="object-cover" priority />
+      <nav className="section-shell flex h-24 items-center justify-between gap-4">
+        <a href="#" className="flex min-w-0 items-center gap-4">
+          <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border-2 border-gold-light/60 bg-white shadow-glow sm:h-[4.5rem] sm:w-[4.5rem]">
+            <Image src="/images/education-office-logo.jpg" alt="โลโก้สำนักการศึกษา เทศบาลเมืองราชบุรี" fill sizes="72px" className="object-cover" priority />
           </span>
           <span className="min-w-0">
-            <span className="block truncate text-sm font-semibold text-white">สำนักการศึกษา</span>
-            <span className="block truncate text-xs text-gold-light/90">เทศบาลเมืองราชบุรี</span>
+            <span className="block truncate text-lg font-extrabold leading-tight text-white sm:text-xl">สำนักการศึกษา</span>
+            <span className="block truncate text-sm font-semibold leading-tight text-gold-light/95 sm:text-base">เทศบาลเมืองราชบุรี</span>
           </span>
         </a>
 

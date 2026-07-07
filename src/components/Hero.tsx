@@ -15,7 +15,7 @@ const sparkles = [
 
 export default function Hero() {
   return (
-    <section id="home" className="relative overflow-hidden pt-20 lg:min-h-[100svh] lg:pt-24">
+    <section id="home" className="relative overflow-hidden pt-24 lg:min-h-[100svh]">
       <Image src="/images/hero-awards.png" alt="ฉากประกาศรางวัลเมืองราชบุรีพร้อมถ้วยรางวัลทอง" fill priority className="object-cover object-[58%_center] opacity-80 lg:object-center" sizes="100vw" />
       <div className="absolute inset-0 bg-gradient-to-b from-midnight/70 via-midnight/78 to-midnight lg:from-midnight/55 lg:via-midnight/68" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_18%,rgba(247,223,155,.2),transparent_18rem)] lg:bg-[radial-gradient(circle_at_70%_22%,rgba(247,223,155,.26),transparent_24rem)]" />
@@ -25,7 +25,7 @@ export default function Hero() {
         ))}
       </div>
 
-      <div className="section-shell relative z-10 grid min-h-[calc(100svh-5rem)] items-center gap-8 py-10 lg:min-h-[calc(100svh-6rem)] lg:grid-cols-[1.05fr_.95fr] lg:gap-10 lg:py-12">
+      <div className="section-shell relative z-10 grid min-h-[calc(100svh-6rem)] items-center gap-8 py-10 lg:grid-cols-[1.05fr_.95fr] lg:gap-10 lg:py-12">
         <motion.div initial={{ opacity: 0, y: 26 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.75 }} className="max-w-3xl">
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-gold-light/35 bg-white/10 px-4 py-2 text-xs font-medium text-gold-light backdrop-blur-xl sm:text-sm">
             <Trophy className="h-4 w-4" />
