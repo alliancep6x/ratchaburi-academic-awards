@@ -1,0 +1,93 @@
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --font-prompt: "Prompt";
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 15% 8%, rgba(215, 170, 66, 0.2), transparent 26rem),
+    radial-gradient(circle at 90% 8%, rgba(28, 80, 165, 0.42), transparent 28rem),
+    linear-gradient(180deg, #061126 0%, #091735 48%, #050914 100%);
+  color: #f7f4ea;
+  font-family: var(--font-prompt), sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image:
+    radial-gradient(circle, rgba(247, 223, 155, 0.62) 0 1px, transparent 1.5px),
+    linear-gradient(115deg, transparent 0 38%, rgba(247, 223, 155, 0.1) 39%, transparent 44%);
+  background-size: 80px 80px, 260px 260px;
+  opacity: 0.38;
+}
+
+::selection {
+  background: rgba(215, 170, 66, 0.55);
+  color: #fff;
+}
+
+.glass-panel {
+  border: 1px solid rgba(247, 223, 155, 0.24);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(18px);
+}
+
+.gold-text {
+  background: linear-gradient(90deg, #fff2c2, #d7aa42 42%, #fff4c8 72%, #a87222);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.section-shell {
+  width: min(1180px, calc(100% - 32px));
+  margin-inline: auto;
+}
+
+.sparkle-field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sparkle-field span {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: #f7df9b;
+  box-shadow: 0 0 18px #f7df9b;
+  animation: twinkle 4.5s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.25;
+    transform: translateY(0) scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-12px) scale(1.25);
+  }
+}
