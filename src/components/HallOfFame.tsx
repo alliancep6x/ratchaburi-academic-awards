@@ -1,88 +1,118 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
-import { Crown, Landmark, Medal, Sparkles, Star, Trophy } from "lucide-react";
+import { Award, Crown, Medal, Sparkles, Star, Trophy } from "lucide-react";
 
-const highlights = [
-  { label: "รางวัลชนะเลิศ", value: "Champion", icon: Trophy },
-  { label: "เหรียญทอง", value: "Gold Medal", icon: Medal },
-  { label: "ตัวแทนระดับประเทศ", value: "National Stage", icon: Crown },
-  { label: "รางวัลยอดเยี่ยม", value: "Excellence", icon: Star }
+const awardSlots = [
+  {
+    title: "ชนะเลิศ",
+    subtitle: "รอประกาศผล",
+    detail: "การ์ดนี้จะแสดงผลงานอันดับสูงสุดหลังประกาศผล",
+    icon: Trophy,
+    className: "lg:scale-105 lg:-translate-y-3 border-gold-light/45 bg-gold/18"
+  },
+  {
+    title: "เหรียญทอง",
+    subtitle: "รอประกาศผล",
+    detail: "รวมรายการที่ได้รับระดับเหรียญทอง",
+    icon: Medal,
+    className: "border-white/12 bg-white/8"
+  },
+  {
+    title: "ผลงานเด่น",
+    subtitle: "รอประกาศผล",
+    detail: "พื้นที่สำหรับผลงานที่สร้างความภาคภูมิใจ",
+    icon: Star,
+    className: "border-white/12 bg-white/8"
+  }
 ];
+
+const updates = ["ฮูลาฮูปประกอบเพลง", "กล่าวสุนทรพจน์", "โครงงานวิทยาศาสตร์"];
 
 export default function HallOfFame() {
   return (
-    <section id="Hall of Fame" className="relative overflow-hidden py-20">
-      <div className="absolute inset-x-0 top-20 h-64 bg-[radial-gradient(circle_at_50%_20%,rgba(215,170,66,.25),transparent_34rem)]" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[linear-gradient(90deg,transparent,rgba(247,223,155,.08),transparent)]" />
-      <div className="spotlight-beam left-[18%] -rotate-12" />
-      <div className="spotlight-beam right-[18%] rotate-12 delay-1000" />
+    <section id="Hall of Fame" className="relative overflow-hidden py-16 sm:py-20">
+      <div className="pointer-events-none absolute inset-x-0 top-10 h-80 bg-[radial-gradient(circle_at_50%_20%,rgba(215,170,66,.24),transparent_34rem)]" />
+      <div className="spotlight-beam left-[16%] -rotate-12" />
+      <div className="spotlight-beam right-[16%] rotate-12 delay-1000" />
+
       <div className="section-shell relative">
-        <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="glass-panel relative overflow-hidden rounded-[2rem] p-6 sm:p-10">
-          <Image src="/images/ratchaburi/wat-mahathat.jpg" alt="วัดมหาธาตุวรวิหาร จังหวัดราชบุรี" fill sizes="100vw" className="object-cover opacity-18" />
-          <div className="absolute inset-0 bg-gradient-to-br from-midnight via-midnight/86 to-midnight/70" />
-          <div className="absolute inset-0 bg-[linear-gradient(115deg,transparent,rgba(247,223,155,.16),transparent)]" />
-          <div className="shine-strip" />
-          <div className="absolute left-1/2 top-0 h-64 w-40 -translate-x-1/2 bg-gold-light/20 blur-3xl" />
-          <div className="relative grid gap-8 lg:grid-cols-[.9fr_1.1fr] lg:items-center">
-            <div>
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-gold-light/35 bg-gold/15 px-4 py-2 text-gold-light">
-                <Crown className="h-5 w-5" />
-                Hall of Fame
-              </div>
-              <h2 className="text-3xl font-extrabold leading-tight text-white sm:text-5xl">
-                เวทีเกียรติยศ
-                <span className="gold-text block">แห่งความสำเร็จ</span>
-              </h2>
-              <p className="mt-5 leading-8 text-white/68">รวมผลงานเด่นจากนักเรียน ครู และโรงเรียนในสังกัดเทศบาลเมืองราชบุรี ที่สร้างชื่อเสียงในการแข่งขันทักษะทางวิชาการระดับภาคกลาง</p>
-              <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/10 px-4 py-2 text-sm font-semibold text-white/78">
-                <Landmark className="h-4 w-4 text-gold-light" />
-                เชื่อมความภูมิใจของนักเรียนเข้ากับอัตลักษณ์เมืองราชบุรี
-              </div>
-              <div className="mt-6 grid max-w-md grid-cols-3 gap-3">
-                {["ศิลปะ", "วัฒนธรรม", "วิชาการ"].map((tag) => (
-                  <div key={tag} className="rounded-2xl border border-gold-light/18 bg-midnight/45 px-3 py-4 text-center backdrop-blur-xl">
-                    <Sparkles className="mx-auto h-5 w-5 text-gold-light" />
-                    <div className="mt-2 text-xs font-bold text-white/78">{tag}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
+        <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="inline-flex items-center gap-2 rounded-full border border-gold-light/30 bg-gold/12 px-4 py-2 text-sm font-bold text-gold-light">
+              <Crown className="h-4 w-4" />
+              Hall of Fame
+            </p>
+            <h2 className="mt-3 text-3xl font-extrabold leading-tight text-white sm:text-5xl">
+              เวทีเกียรติยศ
+              <span className="gold-text block">รอประกาศผู้ได้รับรางวัล</span>
+            </h2>
+            <p className="mt-4 max-w-2xl leading-7 text-white/64">
+              เมื่อประกาศผลแล้ว ส่วนนี้จะแสดงผู้ชนะและผลงานเด่นแบบอ่านง่าย เห็นรางวัลสำคัญได้ทันที
+            </p>
+          </div>
+          <div className="w-fit rounded-full border border-white/12 bg-white/8 px-4 py-2 text-sm font-semibold text-white/70">
+            20 - 23 กรกฎาคม 2569
+          </div>
+        </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              {highlights.map((item, index) => {
-                const Icon = item.icon;
-                return (
-                  <motion.div key={item.label} initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.06 }} className="group relative overflow-hidden rounded-3xl border border-gold-light/25 bg-midnight/62 p-6 transition hover:-translate-y-1 hover:border-gold-light/55 hover:shadow-glow">
-                    <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-gold/20 blur-2xl" />
-                    <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-gold-light/70 to-transparent opacity-0 transition group-hover:opacity-100" />
-                    <div className="absolute right-4 top-4 text-4xl font-extrabold text-white/5">0{index + 1}</div>
-                    <Icon className="relative h-9 w-9 text-gold-light" />
-                    <p className="relative mt-5 text-sm text-white/58">{item.value}</p>
-                    <h3 className="relative mt-1 text-xl font-bold text-white">{item.label}</h3>
-                  </motion.div>
-                );
-              })}
+        <div className="grid gap-4 lg:grid-cols-[1fr_1.18fr_1fr] lg:items-end">
+          {awardSlots.map((slot, index) => {
+            const Icon = slot.icon;
+            return (
+              <motion.article
+                key={slot.title}
+                initial={{ opacity: 0, y: 22 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.06 }}
+                className={`award-card relative overflow-hidden rounded-3xl border p-6 text-center shadow-glass backdrop-blur-xl ${slot.className}`}
+              >
+                <div className="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-gold/22 blur-2xl" />
+                <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-gold-light/80 to-transparent" />
+                <div className="relative mx-auto grid h-20 w-20 place-items-center rounded-full border border-gold-light/35 bg-midnight/60 text-gold-light shadow-glow">
+                  <Icon className="h-10 w-10" />
+                </div>
+                <h3 className="relative mt-5 text-2xl font-extrabold text-white">{slot.title}</h3>
+                <div className="relative mt-3 inline-flex items-center gap-2 rounded-full border border-gold-light/25 bg-midnight/45 px-4 py-2 text-sm font-bold text-gold-light">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-light opacity-60" />
+                    <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-gold-light" />
+                  </span>
+                  {slot.subtitle}
+                </div>
+                <p className="relative mt-4 text-sm leading-6 text-white/62">{slot.detail}</p>
+              </motion.article>
+            );
+          })}
+        </div>
+
+        <div className="mt-6 grid gap-4 lg:grid-cols-[1.35fr_.65fr]">
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/8 p-5 sm:p-6">
+            <div className="absolute -left-16 -top-16 h-36 w-36 rounded-full bg-sapphire/45 blur-3xl" />
+            <div className="relative flex items-center gap-3">
+              <Sparkles className="h-6 w-6 text-gold-light" />
+              <h3 className="text-xl font-extrabold text-white">รายการที่เตรียมขึ้น Hall of Fame</h3>
+            </div>
+            <div className="relative mt-5 grid gap-3 md:grid-cols-3">
+              {updates.map((item) => (
+                <div key={item} className="rounded-2xl border border-gold-light/16 bg-midnight/45 p-4">
+                  <Award className="h-6 w-6 text-gold-light" />
+                  <div className="mt-3 text-sm font-bold text-white">{item}</div>
+                  <div className="mt-2 text-xs text-white/50">รอประกาศผล</div>
+                </div>
+              ))}
             </div>
           </div>
 
-          <div className="relative mt-10 grid gap-4 lg:grid-cols-[.8fr_1.2fr] lg:items-center">
-            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/8">
-              <Image src="/images/ratchaburi/river-sculpture.jpg" alt="ประติมากรรมริมแม่น้ำแม่กลอง จังหวัดราชบุรี" width={720} height={420} className="h-52 w-full object-cover opacity-80" />
-              <div className="absolute inset-0 bg-gradient-to-t from-midnight/85 to-transparent" />
-              <div className="absolute bottom-0 p-5">
-                <div className="text-sm font-semibold text-gold-light">Ratchaburi Landmark</div>
-                <div className="text-xl font-extrabold text-white">เมืองแห่งศิลปะ วัฒนธรรม และความสามารถ</div>
-              </div>
-            </div>
-            <div className="relative overflow-hidden rounded-3xl border border-gold-light/20 bg-gradient-to-r from-gold/25 via-white/8 to-sapphire/25 p-6 text-center lg:text-left">
-              <div className="absolute -right-12 -top-12 h-28 w-28 rounded-full bg-gold-light/20 blur-2xl" />
-              <Sparkles className="mx-auto h-8 w-8 text-gold-light lg:mx-0" />
-              <p className="mt-3 text-lg font-semibold leading-8 text-white">ยกย่องทุกความพยายาม ทุกความสามารถ และทุกความภาคภูมิใจของชาวราชบุรี</p>
-            </div>
+          <div className="rounded-3xl border border-gold-light/22 bg-gradient-to-br from-gold/24 via-white/8 to-sapphire/18 p-6 text-center">
+            <Trophy className="mx-auto h-10 w-10 text-gold-light" />
+            <div className="mt-4 text-3xl font-extrabold text-white">เร็ว ๆ นี้</div>
+            <p className="mt-3 text-sm leading-6 text-white/64">
+              เมื่อมีผลจริง พี่สามารถอัปเดตรายชื่อผู้ชนะ คะแนน และรูปภาพให้ขึ้นหน้านี้ได้ทันที
+            </p>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

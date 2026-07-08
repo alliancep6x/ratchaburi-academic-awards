@@ -1,16 +1,16 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Award, Medal, School, Sparkles, Trophy } from "lucide-react";
+import { CalendarDays, Hourglass, School, Sparkles, Trophy, UserRoundCheck, Users } from "lucide-react";
 import { summary } from "@/data/summary";
 
 const stats = [
   { label: "โรงเรียนในสังกัด", value: summary.schoolCount, suffix: "โรงเรียน", icon: School },
-  { label: "รายการแข่งขัน", value: summary.competitionCount, suffix: "รายการ", icon: Trophy },
-  { label: "เหรียญทอง", value: summary.goldMedals, suffix: "เหรียญ", icon: Medal },
-  { label: "เหรียญเงิน", value: summary.silverMedals, suffix: "เหรียญ", icon: Medal },
-  { label: "เหรียญทองแดง", value: summary.bronzeMedals, suffix: "เหรียญ", icon: Medal },
-  { label: "รางวัลอื่น ๆ", value: summary.otherAwards, suffix: "รางวัล", icon: Award }
+  { label: "รายการจาก PDF", value: summary.competitionCount, suffix: "รายการ", icon: Trophy },
+  { label: "นักเรียนเข้าร่วม", value: summary.studentCount, suffix: "คน", icon: Users },
+  { label: "ครูผู้ฝึกสอน", value: summary.coachCount, suffix: "คน", icon: UserRoundCheck },
+  { label: "รอประกาศผล", value: summary.pendingResults, suffix: "รายการ", icon: Hourglass },
+  { label: "วันแข่งขัน", value: summary.competitionDays, suffix: "วัน", icon: CalendarDays }
 ];
 
 export default function SummaryStats() {

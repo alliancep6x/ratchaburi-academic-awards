@@ -2,14 +2,15 @@
 
 import { Fragment, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { CalendarDays, ChevronDown, ChevronUp, ImageIcon, Landmark, Medal as MedalIcon, Search, SlidersHorizontal, Sparkles, Trophy } from "lucide-react";
+import { Bot, Bookmark, BookOpenText, CalendarDays, ChevronDown, ChevronRight, ChevronUp, FlaskConical, ImageIcon, Mic2, Music2, Palette, PenLine, Medal as MedalIcon, Search, SlidersHorizontal, Sparkles, Trophy, Zap } from "lucide-react";
 import { results, type Medal } from "@/data/results";
 import { scheduleDates } from "@/data/competitions";
 import { schools } from "@/data/schools";
 import { cn, medalClass } from "@/lib/utils";
 
-const levels = ["ทั้งหมด", "อนุบาล", "ป.1-3", "ป.4-6", "ป.1-6", "ม.1-3", "ม.4-6", "ม.1-6", "ครู", "-"];
+const levels = ["ทั้งหมด", ...Array.from(new Set(results.map((result) => result.level))).sort((a, b) => a.localeCompare(b, "th"))];
 const medals = ["ทั้งหมด", "รอผล", "ทอง", "เงิน", "ทองแดง", "อื่น ๆ"];
+const quickFilters = ["ฮูลาฮูป", "คัดลายมือ", "สุนทรพจน์", "หุ่นยนต์", "โครงงาน"];
 
 export default function ResultsTable() {
   const [date, setDate] = useState("ทั้งหมด");
@@ -31,6 +32,8 @@ export default function ResultsTable() {
     });
   }, [date, school, level, medal, query]);
 
+  const featuredResults = filteredResults.slice(0, 4);
+
   return (
     <section id="ผลการแข่งขัน" className="section-shell relative py-14 sm:py-20">
       <div className="pointer-events-none absolute -left-24 top-16 h-72 w-72 rounded-full bg-gold/10 blur-3xl" />
@@ -47,7 +50,7 @@ export default function ResultsTable() {
         <div className="grid grid-cols-2 gap-3 sm:flex">
           <StatusChip icon={CalendarDays} label="4 วันแข่งขัน" />
           <StatusChip icon={Trophy} label={`${filteredResults.length} รายการที่แสดง`} />
-          <StatusChip icon={Landmark} label="เมืองราชบุรี" />
+          <StatusChip icon={Zap} label="บอร์ดประกาศสด" />
         </div>
       </div>
 
@@ -89,8 +92,65 @@ export default function ResultsTable() {
             </span>
           </label>
         </div>
+        <div className="mt-4 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {quickFilters.map((item) => (
+            <button key={item} type="button" onClick={() => setQuery(item)} className="inline-flex shrink-0 items-center gap-2 rounded-full border border-white/10 bg-white/8 px-4 py-2 text-xs font-bold text-white/68 transition hover:border-gold-light/40 hover:text-gold-light">
+              <Sparkles className="h-3.5 w-3.5 text-gold-light" />
+              {item}
+            </button>
+          ))}
+        </div>
 
-        <div className="mt-7 hidden overflow-hidden rounded-2xl border border-white/10 lg:block">
+        {featuredResults.length ? (
+          <div className="mt-7">
+            <div className="mb-3 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-2 text-sm font-semibold text-gold-light">
+                <Sparkles className="h-4 w-4" />
+                การ์ดเด่นจากบอร์ดผล
+              </div>
+              <div className="hidden items-center gap-2 text-xs text-white/45 sm:flex">
+                <span className="grid h-8 w-8 place-items-center rounded-full border border-white/10 bg-white/8">‹</span>
+                <span className="grid h-8 w-8 place-items-center rounded-full border border-gold-light/35 bg-gold/15 text-gold-light">›</span>
+              </div>
+            </div>
+            <div className="flex gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {featuredResults.map((result, index) => (
+                <motion.article
+                  key={`featured-${result.id}`}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.05 }}
+                  className="group relative min-w-[17rem] overflow-hidden rounded-2xl border border-white/10 bg-midnight/60 p-4 transition hover:-translate-y-1 hover:border-gold-light/45 sm:min-w-[20rem]"
+                >
+                  <div className="absolute right-0 top-0 h-24 w-24 rounded-bl-full bg-gold/12" />
+                  <div className="absolute right-3 top-3 text-gold-light">
+                    <Bookmark className="h-5 w-5" />
+                  </div>
+                  <div className="mb-4 flex items-center gap-3">
+                    <div className="grid h-12 w-12 place-items-center rounded-full border border-gold-light/25 bg-sapphire/45 text-gold-light shadow-glow">
+                      <EventIcon event={result.event} className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <div className="text-xs text-white/50">{result.date}</div>
+                      <MedalBadge medal={result.medal} />
+                    </div>
+                  </div>
+                  <h3 className="pr-8 text-lg font-extrabold leading-snug text-white">{result.event}</h3>
+                  <p className="mt-2 text-sm text-white/62">{result.level} · {result.school}</p>
+                  <div className="mt-4 flex items-center justify-between gap-3">
+                    <AwardText award={result.award} />
+                    <button type="button" onClick={() => setExpandedId(expandedId === result.id ? null : result.id)} className="grid h-9 w-9 place-items-center rounded-full border border-gold-light/25 bg-gold/12 text-gold-light transition group-hover:bg-gold group-hover:text-midnight">
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
+                  </div>
+                </motion.article>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        <div className="mt-7 hidden overflow-hidden rounded-2xl border border-white/10 2xl:block">
           <table className="w-full border-collapse text-left text-sm">
             <thead className="bg-white/10 text-gold-light">
               <tr>
@@ -130,7 +190,7 @@ export default function ResultsTable() {
           </table>
         </div>
 
-        <div className="mt-7 grid gap-4 lg:hidden">
+        <div className="mt-7 grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:hidden">
           {filteredResults.map((result, index) => (
             <motion.article
               key={result.id}
@@ -138,16 +198,27 @@ export default function ResultsTable() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.03 }}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-midnight/45 p-4 shadow-[0_18px_45px_rgba(0,0,0,.18)]"
+              className="award-card group relative overflow-hidden rounded-2xl border border-white/10 bg-midnight/45 p-4 shadow-[0_18px_45px_rgba(0,0,0,.18)]"
             >
               <div className="absolute -right-12 -top-12 h-28 w-28 rounded-full bg-gold/10 blur-2xl" />
               <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-gold-light/60 to-transparent opacity-0 transition group-hover:opacity-100" />
+              <div className="absolute right-4 top-4 text-gold-light/70">
+                <Bookmark className="h-5 w-5" />
+              </div>
               <div className="mb-3 flex items-start justify-between gap-3">
-                <div>
+                <div className="flex gap-3 pr-8">
+                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-gold-light/25 bg-sapphire/45 text-gold-light shadow-glow">
+                    <EventIcon event={result.event} className="h-6 w-6" />
+                  </div>
+                  <div>
                   <p className="text-xs text-white/55">{result.date}</p>
                   <h3 className="mt-1 text-lg font-bold text-white">{result.event}</h3>
+                  </div>
                 </div>
+              </div>
+              <div className="mb-4 flex items-center justify-between gap-2">
                 <MedalBadge medal={result.medal} />
+                <span className="rounded-full border border-white/10 bg-white/8 px-3 py-1 text-xs font-semibold text-white/50">#{index + 1}</span>
               </div>
               <div className="grid gap-2 text-sm text-white/70">
                 <p><span className="text-gold-light">ระดับ:</span> {result.level}</p>
@@ -246,4 +317,15 @@ function MedalBadge({ medal }: { medal: Medal }) {
       {medal}
     </span>
   );
+}
+
+function EventIcon({ event, className }: { event: string; className?: string }) {
+  if (event.includes("ฮูลาฮูป") || event.includes("เพลง") || event.includes("รำวง")) return <Music2 className={className} />;
+  if (event.includes("สุนทรพจน์")) return <Mic2 className={className} />;
+  if (event.includes("คัดลายมือ")) return <PenLine className={className} />;
+  if (event.includes("วาดภาพ")) return <Palette className={className} />;
+  if (event.includes("หุ่นยนต์") || event.includes("คอมพิวเตอร์")) return <Bot className={className} />;
+  if (event.includes("วิทยาศาสตร์")) return <FlaskConical className={className} />;
+  if (event.includes("โครงงาน")) return <BookOpenText className={className} />;
+  return <MedalIcon className={className} />;
 }

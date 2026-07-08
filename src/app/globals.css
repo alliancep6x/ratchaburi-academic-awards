@@ -40,6 +40,16 @@ body::before {
   opacity: 0.38;
 }
 
+body::after {
+  content: "";
+  position: fixed;
+  inset: auto 0 0;
+  height: 40vh;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(ellipse at 50% 100%, rgba(215, 170, 66, 0.18), transparent 64%);
+}
+
 ::selection {
   background: rgba(215, 170, 66, 0.55);
   color: #fff;
@@ -79,6 +89,48 @@ body::before {
   background: #f7df9b;
   box-shadow: 0 0 18px #f7df9b;
   animation: twinkle 4.5s ease-in-out infinite;
+}
+
+.confetti-field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti-field span {
+  position: absolute;
+  width: 0.45rem;
+  height: 1.05rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #fff2c2, #d7aa42);
+  box-shadow: 0 0 18px rgba(247, 223, 155, 0.45);
+  animation: confettiFloat 6.2s ease-in-out infinite;
+}
+
+.gold-ribbon {
+  position: absolute;
+  pointer-events: none;
+  width: 42rem;
+  height: 8rem;
+  border: 2px solid rgba(247, 223, 155, 0.44);
+  border-color: rgba(247, 223, 155, 0.44) transparent transparent transparent;
+  border-radius: 50%;
+  filter: drop-shadow(0 0 18px rgba(215, 170, 66, 0.35));
+  opacity: 0.72;
+}
+
+.ribbon-one {
+  right: -9rem;
+  top: 25rem;
+  transform: rotate(-12deg);
+}
+
+.ribbon-two {
+  left: -14rem;
+  top: 17rem;
+  transform: rotate(18deg);
+  opacity: 0.38;
 }
 
 .stage-light,
@@ -122,6 +174,38 @@ body::before {
   animation: shineMove 8s ease-in-out infinite;
 }
 
+.marquee-track {
+  animation: marqueeSlide 24s linear infinite;
+}
+
+.award-card {
+  transform: translateZ(0);
+  transition: transform 220ms ease, border-color 220ms ease, background 220ms ease, box-shadow 220ms ease;
+}
+
+.award-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(247, 223, 155, 0.16), transparent 9rem),
+    linear-gradient(115deg, transparent 0 42%, rgba(255, 255, 255, 0.08) 49%, transparent 58%);
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.award-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(247, 223, 155, 0.42);
+  background: rgba(255, 255, 255, 0.09);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.26), 0 0 28px rgba(215, 170, 66, 0.16);
+}
+
+.award-card:hover::before {
+  opacity: 1;
+}
+
 @keyframes twinkle {
   0%, 100% {
     opacity: 0.25;
@@ -130,6 +214,17 @@ body::before {
   50% {
     opacity: 1;
     transform: translateY(-12px) scale(1.25);
+  }
+}
+
+@keyframes confettiFloat {
+  0%, 100% {
+    opacity: 0.35;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translate3d(0.4rem, -1rem, 0) rotate(18deg);
   }
 }
 
@@ -151,10 +246,35 @@ body::before {
   }
 }
 
+@keyframes marqueeSlide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @media (max-width: 767px) {
   .stage-light,
   .spotlight-beam,
   .shine-strip {
     animation-duration: 11s;
+  }
+
+  .gold-ribbon {
+    width: 24rem;
+    height: 5rem;
+    opacity: 0.42;
+  }
+
+  .ribbon-one {
+    right: -12rem;
+    top: 21rem;
+  }
+
+  .ribbon-two {
+    left: -15rem;
+    top: 14rem;
   }
 }

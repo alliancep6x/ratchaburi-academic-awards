@@ -4,6 +4,7 @@ export type School = {
   shortName: string;
   image: string;
   emblem: string;
+  logo?: string;
   accent: string;
 };
 
@@ -14,6 +15,7 @@ export const schools: School[] = [
     shortName: "เทศบาล 1",
     image: "linear-gradient(135deg, #213f82, #9f742d)",
     emblem: "๑",
+    logo: "/images/schools/municipal-1.jpg",
     accent: "#f7df9b"
   },
   {
@@ -22,6 +24,7 @@ export const schools: School[] = [
     shortName: "เทศบาล 2",
     image: "linear-gradient(135deg, #123a63, #5d9bb9)",
     emblem: "๒",
+    logo: "/images/schools/municipal-2.jpg",
     accent: "#d9ecff"
   },
   {
@@ -30,6 +33,7 @@ export const schools: School[] = [
     shortName: "สาธิตเทศบาล",
     image: "linear-gradient(135deg, #0b1f4d, #d7aa42)",
     emblem: "สธ",
+    logo: "/images/schools/demo-ratchaburi.jpg",
     accent: "#f7df9b"
   },
   {
@@ -38,6 +42,7 @@ export const schools: School[] = [
     shortName: "เทศบาล 4",
     image: "linear-gradient(135deg, #3b2157, #d7aa42)",
     emblem: "๔",
+    logo: "/images/schools/municipal-4.jpg",
     accent: "#e9c86f"
   },
   {
@@ -46,6 +51,7 @@ export const schools: School[] = [
     shortName: "สาธิตพหลโยธิน",
     image: "linear-gradient(135deg, #111827, #b8783c)",
     emblem: "พร",
+    logo: "/images/schools/demo-phahonyothin.jpg",
     accent: "#f1b16d"
   }
 ];

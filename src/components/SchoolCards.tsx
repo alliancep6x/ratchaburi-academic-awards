@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import { schools } from "@/data/schools";
@@ -19,8 +20,12 @@ export default function SchoolCards() {
           <motion.article key={school.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.05 }} whileHover={{ y: -8 }} className="glass-panel group overflow-hidden rounded-2xl sm:rounded-3xl">
             <div className="relative h-40 overflow-hidden" style={{ background: school.image }}>
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(255,255,255,.35),transparent_9rem)]" />
-              <div className="absolute left-4 top-4 grid h-14 w-14 place-items-center rounded-2xl border border-white/25 bg-midnight/45 text-lg font-extrabold text-gold-light backdrop-blur-md">
-                {school.emblem}
+              <div className="absolute left-5 top-5 grid h-24 w-24 place-items-center overflow-hidden rounded-full border-4 border-white/80 bg-white shadow-glow sm:h-28 sm:w-28">
+                {school.logo ? (
+                  <Image src={school.logo} alt={`โลโก้${school.name}`} fill sizes="112px" className="object-contain p-2" />
+                ) : (
+                  <span className="grid h-full w-full place-items-center bg-midnight text-3xl font-extrabold text-gold-light">{school.emblem}</span>
+                )}
               </div>
               <ShieldCheck className="absolute bottom-4 right-4 h-9 w-9 text-white/70" />
             </div>

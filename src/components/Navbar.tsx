@@ -12,10 +12,15 @@ export default function Navbar() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-midnight/80 backdrop-blur-2xl">
-      <nav className="section-shell flex h-24 items-center justify-between gap-4">
-        <a href="#" className="flex min-w-0 items-center gap-4">
-          <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border-2 border-gold-light/60 bg-white shadow-glow sm:h-[4.5rem] sm:w-[4.5rem]">
-            <Image src="/images/education-office-logo.jpg" alt="โลโก้สำนักการศึกษา เทศบาลเมืองราชบุรี" fill sizes="72px" className="object-cover" priority />
+      <nav className="section-shell flex h-24 items-center justify-between gap-3">
+        <a href="#" className="flex min-w-0 items-center gap-3 sm:gap-4">
+          <span className="flex shrink-0 -space-x-3 sm:-space-x-4">
+            <span className="relative h-14 w-14 overflow-hidden rounded-full border-2 border-gold-light/60 bg-white shadow-glow sm:h-[4.25rem] sm:w-[4.25rem]">
+              <Image src="/images/education-office-logo.jpg" alt="โลโก้สำนักการศึกษา เทศบาลเมืองราชบุรี" fill sizes="72px" className="object-cover" priority />
+            </span>
+            <span className="relative h-14 w-14 overflow-hidden rounded-full border-2 border-gold-light/60 bg-white shadow-glow sm:h-[4.25rem] sm:w-[4.25rem]">
+              <Image src="/images/logos/ratchaburi-municipality-logo.jpeg" alt="โลโก้เทศบาลเมืองราชบุรี จังหวัดราชบุรี" fill sizes="72px" className="object-cover" priority />
+            </span>
           </span>
           <span className="min-w-0">
             <span className="block truncate text-lg font-extrabold leading-tight text-white sm:text-xl">สำนักการศึกษา</span>

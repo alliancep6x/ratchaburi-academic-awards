@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { CalendarDays, ChevronRight, Crown, Landmark, Medal, Sparkles, Star, Trophy } from "lucide-react";
+import { CalendarDays, ChevronRight, Crown, Megaphone, Medal, Sparkles, Star, Trophy, Users } from "lucide-react";
+import { summary } from "@/data/summary";
 
 const sparkles = [
   ["12%", "18%", "0s"],
@@ -13,31 +14,51 @@ const sparkles = [
   ["88%", "18%", "2.8s"]
 ];
 
+const confetti = [
+  ["18%", "26%", "0s", "rotate-12"],
+  ["31%", "19%", ".6s", "-rotate-12"],
+  ["53%", "27%", "1.1s", "rotate-45"],
+  ["68%", "18%", ".2s", "-rotate-45"],
+  ["84%", "33%", "1.4s", "rotate-12"],
+  ["92%", "57%", ".8s", "-rotate-12"]
+];
+
 const floatingMedals = [
   { label: "Ratchaburi", top: "15%", right: "12%", delay: "0s", icon: Crown },
   { label: "Academic", top: "42%", right: "5%", delay: ".8s", icon: Medal },
   { label: "Awards", top: "72%", right: "15%", delay: "1.4s", icon: Star }
 ];
 
-const ratchaburiScenes = [
-  { title: "หอศิลป์ร่วมสมัย", caption: "แรงบันดาลใจริมแม่น้ำแม่กลอง", image: "/images/ratchaburi/river-sculpture.jpg" },
-  { title: "วัดมหาธาตุวรวิหาร", caption: "รากวัฒนธรรมเมืองราชบุรี", image: "/images/ratchaburi/wat-mahathat.jpg" }
+const liveCards = [
+  { title: "รายการแข่งขัน", value: summary.competitionCount.toLocaleString("th-TH"), caption: "อ้างอิงจากไฟล์ PDF ล่าสุด", icon: Trophy },
+  { title: "โรงเรียนเข้าร่วม", value: summary.schoolCount, caption: "สังกัดเทศบาลเมืองราชบุรี", icon: Crown },
+  { title: "นักเรียนเข้าร่วม", value: summary.studentCount.toLocaleString("th-TH"), caption: "นับจากรายชื่อผู้แข่งขันใน PDF", icon: Users },
+  { title: "สถานะผล", value: "รอผล", caption: `${summary.pendingResults.toLocaleString("th-TH")} รายการพร้อมอัปเดต`, icon: Medal }
 ];
+
+const announcementItems = ["คัดลายมือ", "ฮูลาฮูปประกอบเพลง", "กล่าวสุนทรพจน์", "หุ่นยนต์", "โครงงานวิทยาศาสตร์", "รำวงมาตรฐาน"];
 
 export default function Hero() {
   return (
     <section id="home" className="relative overflow-hidden pt-24 lg:min-h-[100svh]">
-      <Image src="/images/hero-awards.png" alt="ฉากประกาศรางวัลเมืองราชบุรีพร้อมถ้วยรางวัลทอง" fill priority className="object-cover object-[58%_center] opacity-80 lg:object-center" sizes="100vw" />
+      <Image src="/images/hero-awards-ratchaburi.png" alt="ฉากประกาศรางวัลเมืองราชบุรีพร้อมถ้วยรางวัลทอง" fill priority className="object-cover object-[58%_center] opacity-80 lg:object-center" sizes="100vw" />
       <div className="absolute inset-0 bg-gradient-to-b from-midnight/70 via-midnight/78 to-midnight lg:from-midnight/55 lg:via-midnight/68" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_18%,rgba(247,223,155,.2),transparent_18rem)] lg:bg-[radial-gradient(circle_at_70%_22%,rgba(247,223,155,.26),transparent_24rem)]" />
       <div className="pointer-events-none absolute inset-x-0 top-24 h-44 bg-[linear-gradient(100deg,transparent_0%,rgba(247,223,155,.16)_34%,transparent_62%)] opacity-70 mix-blend-screen" />
       <div className="stage-light left-[9%] -rotate-12" />
       <div className="stage-light right-[8%] rotate-12 delay-700" />
+      <div className="gold-ribbon ribbon-one" />
+      <div className="gold-ribbon ribbon-two" />
       <div className="pointer-events-none absolute -right-20 top-28 hidden h-[34rem] w-[34rem] rounded-full border border-gold-light/15 lg:block" />
       <div className="pointer-events-none absolute right-10 top-36 hidden h-[24rem] w-[24rem] rounded-full border border-white/10 lg:block" />
       <div className="sparkle-field">
         {sparkles.map(([left, top, delay]) => (
           <span key={`${left}-${top}`} style={{ left, top, animationDelay: delay }} />
+        ))}
+      </div>
+      <div className="confetti-field">
+        {confetti.map(([left, top, delay, rotate]) => (
+          <span key={`${left}-${top}`} className={rotate} style={{ left, top, animationDelay: delay }} />
         ))}
       </div>
       <div className="pointer-events-none absolute inset-0 hidden lg:block">
@@ -61,31 +82,48 @@ export default function Hero() {
         <motion.div initial={{ opacity: 0, y: 26 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.75 }} className="max-w-3xl">
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-gold-light/35 bg-white/10 px-4 py-2 text-xs font-medium text-gold-light backdrop-blur-xl sm:text-sm">
             <Trophy className="h-4 w-4" />
-            Ratchaburi Academic Awards 2569
+            ท่าโขลงวิชาการ 2569
           </div>
           <h1 className="text-balance text-[2.45rem] font-extrabold leading-[1.12] text-white sm:text-5xl lg:text-7xl">
             ประกาศผลการแข่งขัน
             <span className="gold-text block">ทักษะทางวิชาการ</span>
+            <span className="mt-1 block text-[1.85rem] leading-tight text-gold-light sm:text-4xl lg:text-5xl">“ท่าโขลงวิชาการ”</span>
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-7 text-platinum/88 sm:text-xl sm:leading-8">
-            ระดับภาคกลาง ประจำปี 2569
+            ตัวแทนสถานศึกษาในสังกัดเทศบาลเมืองราชบุรี
+            <span className="block">ระดับภาคกลาง ประจำปี 2569</span>
             <span className="block font-semibold text-gold-light">สำนักการศึกษา เทศบาลเมืองราชบุรี</span>
           </p>
-          <div className="mt-5 grid max-w-2xl gap-3 sm:grid-cols-2">
-            {ratchaburiScenes.map((scene) => (
-              <div key={scene.title} className="group relative min-h-24 overflow-hidden rounded-2xl border border-gold-light/20 bg-white/10 backdrop-blur-xl">
-                <Image src={scene.image} alt={scene.title} fill sizes="(max-width: 768px) 50vw, 320px" className="object-cover opacity-40 transition duration-500 group-hover:scale-105 group-hover:opacity-55" />
-                <div className="absolute inset-0 bg-gradient-to-r from-midnight/86 via-midnight/58 to-transparent" />
-                <div className="relative p-4">
-                  <div className="inline-flex items-center gap-2 rounded-full bg-gold/20 px-3 py-1 text-[11px] font-bold text-gold-light">
-                    <Landmark className="h-3.5 w-3.5" />
-                    ราชบุรี
-                  </div>
-                  <div className="mt-3 text-sm font-bold text-white">{scene.title}</div>
-                  <div className="mt-1 text-xs text-white/68">{scene.caption}</div>
-                </div>
-              </div>
-            ))}
+          <div className="mt-5 overflow-hidden rounded-full border border-gold-light/25 bg-midnight/55 px-3 py-2 backdrop-blur-xl">
+            <div className="marquee-track flex w-max items-center gap-6 text-sm font-semibold text-white/76">
+              {[...announcementItems, ...announcementItems].map((item, index) => (
+                <span key={`${item}-${index}`} className="inline-flex items-center gap-2">
+                  <Megaphone className="h-4 w-4 text-gold-light" />
+                  {item}
+                  <span className="text-gold-light">รอประกาศผล</span>
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="mt-5 grid max-w-2xl grid-cols-2 gap-3 lg:grid-cols-4">
+            {liveCards.map((card, index) => {
+              const Icon = card.icon;
+              return (
+                <motion.div
+                  key={card.title}
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.55, delay: 0.12 + index * 0.05 }}
+                  className="group relative overflow-hidden rounded-2xl border border-gold-light/20 bg-white/10 p-4 backdrop-blur-xl"
+                >
+                  <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-gold/15 blur-2xl" />
+                  <Icon className="relative h-5 w-5 text-gold-light" />
+                  <div className="relative mt-3 text-xl font-extrabold text-white">{card.value}</div>
+                  <div className="relative mt-1 text-xs font-semibold text-gold-light">{card.title}</div>
+                  <div className="relative mt-2 text-[11px] leading-4 text-white/55">{card.caption}</div>
+                </motion.div>
+              );
+            })}
           </div>
           <div className="mt-6 flex flex-col gap-3 text-sm text-white/84 sm:flex-row sm:flex-wrap sm:items-center">
             <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2">
@@ -97,8 +135,8 @@ export default function Hero() {
               Hall of Fame ระดับภาคกลาง
             </span>
             <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2">
-              <Landmark className="h-4 w-4 text-gold-light" />
-              กลิ่นอายเมืองราชบุรี
+              <Sparkles className="h-4 w-4 text-gold-light" />
+              เวทีประกาศผลแบบมีชีวิต
             </span>
           </div>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -147,13 +185,18 @@ export default function Hero() {
               </div>
             </div>
             <div className="mt-5 grid gap-3">
-              {ratchaburiScenes.map((scene) => (
-                <div key={scene.title} className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/10">
-                  <Image src={scene.image} alt={scene.title} width={520} height={240} className="h-28 w-full object-cover opacity-72 transition duration-500 group-hover:scale-105 group-hover:opacity-90" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-midnight via-midnight/40 to-transparent" />
-                  <div className="absolute inset-x-0 bottom-0 p-4">
-                    <div className="text-base font-bold text-white">{scene.title}</div>
-                    <div className="text-xs text-gold-light/90">{scene.caption}</div>
+              {["คัดลายมือ", "กล่าวสุนทรพจน์ภาษาอังกฤษ", "ฮูลาฮูปประกอบเพลง"].map((event, index) => (
+                <div key={event} className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/10 p-4 transition hover:-translate-y-0.5 hover:border-gold-light/40">
+                  <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-gold-light to-transparent opacity-0 transition group-hover:opacity-100" />
+                  <div className="absolute right-4 top-4 rounded-full border border-gold-light/30 bg-gold/15 px-2 py-1 text-[10px] font-bold text-gold-light">{index === 1 ? "LIVE" : "WAIT"}</div>
+                  <div className="flex items-center gap-3">
+                    <div className="grid h-11 w-11 place-items-center rounded-full border border-gold-light/25 bg-midnight/65 text-gold-light">
+                      <Medal className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-white">{event}</div>
+                      <div className="mt-1 text-xs text-white/55">รอประกาศผลการแข่งขัน</div>
+                    </div>
                   </div>
                 </div>
               ))}

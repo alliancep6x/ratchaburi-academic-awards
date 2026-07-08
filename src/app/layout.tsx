@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ประกาศผลการแข่งขันทักษะทางวิชาการ ระดับภาคกลาง 2569",
-  description: "สำนักการศึกษา เทศบาลเมืองราชบุรี"
+  title: "ประกาศผลการแข่งขันทักษะทางวิชาการ ท่าโขลงวิชาการ 2569",
+  description: "ตัวแทนสถานศึกษาในสังกัดเทศบาลเมืองราชบุรี ระดับภาคกลาง ประจำปี 2569"
 };
 
 export default function RootLayout({
