@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { CalendarDays, ChevronRight, Crown, Megaphone, Medal, Sparkles, Star, Trophy, Users } from "lucide-react";
+import { CalendarDays, ChevronRight, Crown, Hourglass, Megaphone, Medal, Sparkles, Star, Trophy } from "lucide-react";
 import { results } from "@/data/results";
 import { summary } from "@/data/summary";
 
@@ -31,11 +31,19 @@ const floatingMedals = [
 ];
 
 const liveCards = [
-  { title: "รายการแข่งขัน", value: summary.competitionCount.toLocaleString("th-TH"), caption: "อ้างอิงจากไฟล์ PDF ล่าสุด", icon: Trophy },
-  { title: "โรงเรียนเข้าร่วม", value: summary.schoolCount, caption: "สังกัดเทศบาลเมืองราชบุรี", icon: Crown },
-  { title: "นักเรียนเข้าร่วม", value: summary.studentCount.toLocaleString("th-TH"), caption: "นับจากรายชื่อผู้แข่งขันใน PDF", icon: Users },
-  { title: "สถานะผล", value: "รอผล", caption: `${summary.pendingResults.toLocaleString("th-TH")} รายการพร้อมอัปเดต`, icon: Medal }
+  { title: "เหรียญทอง", value: summary.goldMedals, caption: "ประกาศแล้ว", icon: Trophy, className: "text-gold-light" },
+  { title: "เหรียญเงิน", value: summary.silverMedals, caption: "ประกาศแล้ว", icon: Medal, className: "text-platinum" },
+  { title: "เหรียญทองแดง", value: summary.bronzeMedals, caption: "ประกาศแล้ว", icon: Medal, className: "text-[#e7a56a]" },
+  { title: "รอประกาศ", value: summary.pendingResults, caption: "รายการ", icon: Hourglass, className: "text-white/72" }
 ];
+
+const medalOverview = [
+  { label: "ทอง", value: summary.goldMedals, className: "text-gold-light", bgClassName: "bg-gold/14 border-gold-light/28" },
+  { label: "เงิน", value: summary.silverMedals, className: "text-platinum", bgClassName: "bg-white/10 border-white/16" },
+  { label: "ทองแดง", value: summary.bronzeMedals, className: "text-[#e7a56a]", bgClassName: "bg-[#e7a56a]/12 border-[#e7a56a]/25" }
+];
+
+const announcedCount = summary.goldMedals + summary.silverMedals + summary.bronzeMedals + summary.otherAwards;
 
 const announcementItems = ["คัดลายมือ", "ฮูลาฮูปประกอบเพลง", "กล่าวสุนทรพจน์", "หุ่นยนต์", "โครงงานวิทยาศาสตร์", "รำวงมาตรฐาน"].map((event) => {
   const announcedResult = results.find((result) => result.event.includes(event) && result.medal !== "รอผล");
@@ -124,8 +132,8 @@ export default function Hero() {
                   className="group relative overflow-hidden rounded-2xl border border-gold-light/20 bg-white/10 p-4 backdrop-blur-xl"
                 >
                   <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-gold/15 blur-2xl" />
-                  <Icon className="relative h-5 w-5 text-gold-light" />
-                  <div className="relative mt-3 text-xl font-extrabold text-white">{card.value}</div>
+                  <Icon className={`relative h-5 w-5 ${card.className}`} />
+                  <div className="relative mt-3 text-2xl font-extrabold text-white">{card.value.toLocaleString("th-TH")}</div>
                   <div className="relative mt-1 text-xs font-semibold text-gold-light">{card.title}</div>
                   <div className="relative mt-2 text-[11px] leading-4 text-white/55">{card.caption}</div>
                 </motion.div>
@@ -157,10 +165,10 @@ export default function Hero() {
           </div>
 
           <div className="mt-7 grid grid-cols-3 gap-3 lg:hidden">
-            {["เมืองราชบุรี", "เวทีเกียรติยศ", "รอผลสด"].map((label) => (
-              <div key={label} className="rounded-2xl border border-gold-light/20 bg-midnight/45 p-3 text-center backdrop-blur-xl">
-                <Sparkles className="mx-auto h-5 w-5 text-gold-light" />
-                <div className="mt-2 text-xs font-medium text-white/78">{label}</div>
+            {medalOverview.map((medal) => (
+              <div key={medal.label} className="rounded-2xl border border-gold-light/20 bg-midnight/45 p-3 text-center backdrop-blur-xl">
+                <Sparkles className={`mx-auto h-5 w-5 ${medal.className}`} />
+                <div className="mt-2 text-xs font-medium text-white/78">{medal.label} {medal.value.toLocaleString("th-TH")}</div>
               </div>
             ))}
           </div>
@@ -172,37 +180,49 @@ export default function Hero() {
           <div className="relative rounded-[1.5rem] border border-gold-light/25 bg-midnight/50 p-4">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <div className="text-sm text-gold-light">Ratchaburi Stage</div>
-                <div className="mt-2 text-2xl font-extrabold leading-tight text-white">เวทีประกาศผลแห่งเมืองราชบุรี</div>
+                <div className="text-sm font-bold text-gold-light">สรุปเหรียญล่าสุด</div>
+                <div className="mt-2 text-2xl font-extrabold leading-tight text-white">เทศบาลเมืองราชบุรี</div>
               </div>
               <div className="grid h-14 w-14 place-items-center rounded-full bg-gold text-midnight shadow-glow">
                 <Trophy className="h-8 w-8" />
               </div>
             </div>
-            <div className="mt-5 rounded-2xl border border-gold-light/20 bg-white/10 p-4">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <div className="text-xs font-semibold uppercase tracking-[.22em] text-gold-light">Award Status</div>
-                  <div className="mt-1 text-lg font-bold text-white">รอประกาศผลการแข่งขัน</div>
+
+            <div className="mt-5 grid grid-cols-3 gap-3">
+              {medalOverview.map((medal) => (
+                <div key={medal.label} className={`rounded-2xl border p-4 text-center ${medal.bgClassName}`}>
+                  <Medal className={`mx-auto h-6 w-6 ${medal.className}`} />
+                  <div className="mt-3 text-4xl font-extrabold leading-none text-white">{medal.value.toLocaleString("th-TH")}</div>
+                  <div className={`mt-2 text-sm font-bold ${medal.className}`}>{medal.label}</div>
                 </div>
-                <div className="relative grid h-14 w-14 place-items-center rounded-full border border-gold-light/35 bg-midnight/60">
-                  <span className="absolute h-11 w-11 animate-ping rounded-full bg-gold/20" />
-                  <Sparkles className="relative h-7 w-7 text-gold-light" />
+              ))}
+            </div>
+
+            <div className="mt-4 rounded-2xl border border-white/10 bg-white/8 p-4">
+              <div className="flex items-center justify-between gap-4">
+                <div className="min-w-0">
+                  <div className="text-xs font-semibold text-white/50">ประกาศผลแล้ว</div>
+                  <div className="mt-1 text-2xl font-extrabold text-white">{announcedCount.toLocaleString("th-TH")} / {results.length.toLocaleString("th-TH")}</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-xs font-semibold text-white/50">รอประกาศ</div>
+                  <div className="mt-1 text-2xl font-extrabold text-gold-light">{summary.pendingResults.toLocaleString("th-TH")}</div>
                 </div>
               </div>
             </div>
+
             <div className="mt-5 grid gap-3">
-              {["คัดลายมือ", "กล่าวสุนทรพจน์ภาษาอังกฤษ", "ฮูลาฮูปประกอบเพลง"].map((event, index) => (
-                <div key={event} className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/10 p-4 transition hover:-translate-y-0.5 hover:border-gold-light/40">
+              {announcementItems.slice(0, 3).map((item) => (
+                <div key={item.event} className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/10 p-4 transition hover:-translate-y-0.5 hover:border-gold-light/40">
                   <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-gold-light to-transparent opacity-0 transition group-hover:opacity-100" />
-                  <div className="absolute right-4 top-4 rounded-full border border-gold-light/30 bg-gold/15 px-2 py-1 text-[10px] font-bold text-gold-light">{index === 1 ? "LIVE" : "WAIT"}</div>
+                  <div className="absolute right-4 top-4 rounded-full border border-gold-light/30 bg-gold/15 px-2 py-1 text-[10px] font-bold text-gold-light">{item.status === "รอประกาศผล" ? "WAIT" : "LIVE"}</div>
                   <div className="flex items-center gap-3">
                     <div className="grid h-11 w-11 place-items-center rounded-full border border-gold-light/25 bg-midnight/65 text-gold-light">
                       <Medal className="h-5 w-5" />
                     </div>
                     <div>
-                      <div className="text-sm font-bold text-white">{event}</div>
-                      <div className="mt-1 text-xs text-white/55">รอประกาศผลการแข่งขัน</div>
+                      <div className="text-sm font-bold text-white">{item.event}</div>
+                      <div className="mt-1 text-xs text-white/55">{item.status}</div>
                     </div>
                   </div>
                 </div>
