@@ -1,7 +1,8 @@
 "use client";
 
 import { Fragment, useMemo, useState } from "react";
-import { ChevronDown, ChevronUp, ImageIcon, Search, SlidersHorizontal } from "lucide-react";
+import { motion } from "framer-motion";
+import { CalendarDays, ChevronDown, ChevronUp, ImageIcon, Medal as MedalIcon, Search, SlidersHorizontal, Sparkles, Trophy } from "lucide-react";
 import { results, type Medal } from "@/data/results";
 import { scheduleDates } from "@/data/competitions";
 import { schools } from "@/data/schools";
@@ -31,16 +32,46 @@ export default function ResultsTable() {
   }, [date, school, level, medal, query]);
 
   return (
-    <section id="ผลการแข่งขัน" className="section-shell py-14 sm:py-20">
-      <div className="mb-8">
-        <p className="text-sm font-semibold text-gold-light">Latest Results</p>
-        <h2 className="mt-2 text-2xl font-extrabold text-white sm:text-4xl">ผลการแข่งขันล่าสุด</h2>
+    <section id="ผลการแข่งขัน" className="section-shell relative py-14 sm:py-20">
+      <div className="pointer-events-none absolute -left-24 top-16 h-72 w-72 rounded-full bg-gold/10 blur-3xl" />
+      <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <p className="inline-flex items-center gap-2 rounded-full border border-gold-light/25 bg-gold/10 px-4 py-2 text-sm font-semibold text-gold-light">
+            <Sparkles className="h-4 w-4" />
+            Live Award Board
+          </p>
+          <h2 className="mt-3 text-2xl font-extrabold text-white sm:text-4xl">ผลการแข่งขันล่าสุด</h2>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-white/62">ติดตามสถานะรางวัลของแต่ละรายการในรูปแบบการ์ด อ่านง่าย และพร้อมอัปเดตเมื่อประกาศผล</p>
+        </div>
+        <div className="grid grid-cols-2 gap-3 sm:flex">
+          <StatusChip icon={CalendarDays} label="4 วันแข่งขัน" />
+          <StatusChip icon={Trophy} label={`${filteredResults.length} รายการที่แสดง`} />
+        </div>
       </div>
 
-      <div className="glass-panel rounded-2xl p-4 sm:rounded-3xl sm:p-6">
-        <div className="mb-6 flex items-center gap-2 text-gold-light">
-          <SlidersHorizontal className="h-5 w-5" />
-          <span className="font-semibold">ตัวกรองผลการแข่งขัน</span>
+      <div className="glass-panel relative overflow-hidden rounded-2xl p-4 sm:rounded-3xl sm:p-6">
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-gold-light to-transparent" />
+        <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex items-center gap-2 text-gold-light">
+            <SlidersHorizontal className="h-5 w-5" />
+            <span className="font-semibold">ตัวกรองผลการแข่งขัน</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {medals.map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => setMedal(item)}
+                className={cn(
+                  "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-bold transition",
+                  medal === item ? "border-gold-light bg-gold text-midnight shadow-glow" : "border-white/12 bg-white/8 text-white/70 hover:border-gold-light/45 hover:text-gold-light"
+                )}
+              >
+                <MedalIcon className="h-4 w-4" />
+                {item}
+              </button>
+            ))}
+          </div>
         </div>
         <div className="grid gap-3 lg:grid-cols-[1.1fr_1.5fr_1fr_1fr_1.6fr]">
           <Select label="วันที่" value={date} onChange={setDate} options={["ทั้งหมด", ...scheduleDates]} />
@@ -73,7 +104,7 @@ export default function ResultsTable() {
                     <td className="px-4 py-4 font-semibold text-white">{result.event}</td>
                     <td className="px-4 py-4 text-white/72">{result.level}</td>
                     <td className="px-4 py-4 text-white/72">{result.school}</td>
-                    <td className="px-4 py-4 text-gold-light">{result.award}</td>
+                    <td className="px-4 py-4"><AwardText award={result.award} /></td>
                     <td className="px-4 py-4"><MedalBadge medal={result.medal} /></td>
                     <td className="px-4 py-4 font-bold text-white">{result.score ?? "-"}</td>
                     <td className="px-4 py-4">
@@ -97,8 +128,16 @@ export default function ResultsTable() {
         </div>
 
         <div className="mt-7 grid gap-4 lg:hidden">
-          {filteredResults.map((result) => (
-            <article key={result.id} className="rounded-2xl border border-white/10 bg-midnight/45 p-4">
+          {filteredResults.map((result, index) => (
+            <motion.article
+              key={result.id}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.03 }}
+              className="relative overflow-hidden rounded-2xl border border-white/10 bg-midnight/45 p-4"
+            >
+              <div className="absolute -right-12 -top-12 h-28 w-28 rounded-full bg-gold/10 blur-2xl" />
               <div className="mb-3 flex items-start justify-between gap-3">
                 <div>
                   <p className="text-xs text-white/55">{result.date}</p>
@@ -109,7 +148,7 @@ export default function ResultsTable() {
               <div className="grid gap-2 text-sm text-white/70">
                 <p><span className="text-gold-light">ระดับ:</span> {result.level}</p>
                 <p><span className="text-gold-light">โรงเรียน:</span> {result.school}</p>
-                <p><span className="text-gold-light">รางวัล:</span> {result.award}</p>
+                <p><span className="text-gold-light">รางวัล:</span> <AwardText award={result.award} /></p>
                 <p><span className="text-gold-light">คะแนน:</span> {result.score ?? "-"}</p>
                 <p><span className="text-gold-light">หมายเหตุ:</span> {result.note}</p>
               </div>
@@ -118,13 +157,32 @@ export default function ResultsTable() {
                 ดูรายชื่อนักเรียนและครู
               </button>
               {expandedId === result.id ? <div className="mt-4"><ResultDetails result={result} /></div> : null}
-            </article>
+            </motion.article>
           ))}
         </div>
 
         {filteredResults.length === 0 ? <div className="mt-7 rounded-2xl border border-white/10 bg-white/8 p-8 text-center text-white/68">ไม่พบผลการแข่งขันตามตัวกรองที่เลือก</div> : null}
       </div>
     </section>
+  );
+}
+
+function StatusChip({ icon: Icon, label }: { icon: typeof Trophy; label: string }) {
+  return (
+    <div className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm font-semibold text-white/78">
+      <Icon className="h-4 w-4 text-gold-light" />
+      {label}
+    </div>
+  );
+}
+
+function AwardText({ award }: { award: string }) {
+  const waiting = award.includes("รอผล");
+  return (
+    <span className={cn("inline-flex items-center gap-2 font-semibold", waiting ? "text-gold-light" : "text-white")}>
+      {waiting ? <span className="relative flex h-2.5 w-2.5"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-light opacity-60" /><span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-gold-light" /></span> : <Trophy className="h-4 w-4 text-gold-light" />}
+      {award}
+    </span>
   );
 }
 
