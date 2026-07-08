@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { CalendarDays, ChevronRight, Crown, Megaphone, Medal, Sparkles, Star, Trophy, Users } from "lucide-react";
+import { results } from "@/data/results";
 import { summary } from "@/data/summary";
 
 const sparkles = [
@@ -36,7 +37,13 @@ const liveCards = [
   { title: "สถานะผล", value: "รอผล", caption: `${summary.pendingResults.toLocaleString("th-TH")} รายการพร้อมอัปเดต`, icon: Medal }
 ];
 
-const announcementItems = ["คัดลายมือ", "ฮูลาฮูปประกอบเพลง", "กล่าวสุนทรพจน์", "หุ่นยนต์", "โครงงานวิทยาศาสตร์", "รำวงมาตรฐาน"];
+const announcementItems = ["คัดลายมือ", "ฮูลาฮูปประกอบเพลง", "กล่าวสุนทรพจน์", "หุ่นยนต์", "โครงงานวิทยาศาสตร์", "รำวงมาตรฐาน"].map((event) => {
+  const announcedResult = results.find((result) => result.event.includes(event) && result.medal !== "รอผล");
+  return {
+    event,
+    status: announcedResult ? announcedResult.award : "รอประกาศผล"
+  };
+});
 
 export default function Hero() {
   return (
@@ -97,10 +104,10 @@ export default function Hero() {
           <div className="mt-5 overflow-hidden rounded-full border border-gold-light/25 bg-midnight/55 px-3 py-2 backdrop-blur-xl">
             <div className="marquee-track flex w-max items-center gap-6 text-sm font-semibold text-white/76">
               {[...announcementItems, ...announcementItems].map((item, index) => (
-                <span key={`${item}-${index}`} className="inline-flex items-center gap-2">
+                <span key={`${item.event}-${index}`} className="inline-flex items-center gap-2">
                   <Megaphone className="h-4 w-4 text-gold-light" />
-                  {item}
-                  <span className="text-gold-light">รอประกาศผล</span>
+                  {item.event}
+                  <span className="text-gold-light">{item.status}</span>
                 </span>
               ))}
             </div>
