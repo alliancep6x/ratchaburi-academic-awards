@@ -94,7 +94,7 @@ export default function Hero() {
       </div>
 
       <div className="section-shell relative z-10 grid min-h-[calc(100svh-6rem)] items-center gap-8 py-10 lg:grid-cols-[1.05fr_.95fr] lg:gap-10 lg:py-12">
-        <motion.div initial={{ opacity: 0, y: 26 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.75 }} className="max-w-3xl">
+        <motion.div initial={{ opacity: 0, y: 26 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.75 }} className="w-full min-w-0 max-w-3xl">
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-gold-light/35 bg-white/10 px-4 py-2 text-xs font-medium text-gold-light backdrop-blur-xl sm:text-sm">
             <Trophy className="h-4 w-4" />
             ท่าโขลงวิชาการ 2569
@@ -120,7 +120,7 @@ export default function Hero() {
               ))}
             </div>
           </div>
-          <div className="mt-5 grid max-w-2xl grid-cols-2 gap-3 lg:grid-cols-4">
+          <div className="mt-5 grid w-full max-w-2xl grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {liveCards.map((card, index) => {
               const Icon = card.icon;
               return (
