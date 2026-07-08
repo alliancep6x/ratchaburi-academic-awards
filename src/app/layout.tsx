@@ -15,8 +15,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/images/og-image.png",
-        width: 1200,
-        height: 630,
+        width: 1536,
+        height: 1024,
         alt: "ประกาศผลการแข่งขันทักษะทางวิชาการ ท่าโขลงวิชาการ 2569"
       }
     ]
