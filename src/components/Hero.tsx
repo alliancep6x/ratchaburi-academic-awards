@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { CalendarDays, ChevronRight, Landmark, Medal, Sparkles, Trophy } from "lucide-react";
+import { CalendarDays, ChevronRight, Crown, Landmark, Medal, Sparkles, Star, Trophy } from "lucide-react";
 
 const sparkles = [
   ["12%", "18%", "0s"],
@@ -14,9 +14,9 @@ const sparkles = [
 ];
 
 const floatingMedals = [
-  { label: "Ratchaburi", top: "18%", right: "12%", delay: "0s" },
-  { label: "Academic", top: "42%", right: "5%", delay: ".8s" },
-  { label: "Awards", top: "72%", right: "15%", delay: "1.4s" }
+  { label: "Ratchaburi", top: "15%", right: "12%", delay: "0s", icon: Crown },
+  { label: "Academic", top: "42%", right: "5%", delay: ".8s", icon: Medal },
+  { label: "Awards", top: "72%", right: "15%", delay: "1.4s", icon: Star }
 ];
 
 const ratchaburiScenes = [
@@ -31,6 +31,8 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-midnight/70 via-midnight/78 to-midnight lg:from-midnight/55 lg:via-midnight/68" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_18%,rgba(247,223,155,.2),transparent_18rem)] lg:bg-[radial-gradient(circle_at_70%_22%,rgba(247,223,155,.26),transparent_24rem)]" />
       <div className="pointer-events-none absolute inset-x-0 top-24 h-44 bg-[linear-gradient(100deg,transparent_0%,rgba(247,223,155,.16)_34%,transparent_62%)] opacity-70 mix-blend-screen" />
+      <div className="stage-light left-[9%] -rotate-12" />
+      <div className="stage-light right-[8%] rotate-12 delay-700" />
       <div className="pointer-events-none absolute -right-20 top-28 hidden h-[34rem] w-[34rem] rounded-full border border-gold-light/15 lg:block" />
       <div className="pointer-events-none absolute right-10 top-36 hidden h-[24rem] w-[24rem] rounded-full border border-white/10 lg:block" />
       <div className="sparkle-field">
@@ -39,17 +41,20 @@ export default function Hero() {
         ))}
       </div>
       <div className="pointer-events-none absolute inset-0 hidden lg:block">
-        {floatingMedals.map((item) => (
-          <motion.div
-            key={item.label}
-            animate={{ y: [0, -16, 0], rotate: [-4, 4, -4] }}
-            transition={{ duration: 5.8, delay: Number.parseFloat(item.delay), repeat: Infinity, ease: "easeInOut" }}
-            className="absolute grid h-14 w-14 place-items-center rounded-full border border-gold-light/35 bg-midnight/55 text-gold-light shadow-glow backdrop-blur-xl"
-            style={{ top: item.top, right: item.right }}
-          >
-            <Medal className="h-7 w-7" />
-          </motion.div>
-        ))}
+        {floatingMedals.map((item) => {
+          const Icon = item.icon;
+          return (
+            <motion.div
+              key={item.label}
+              animate={{ y: [0, -16, 0], rotate: [-4, 4, -4] }}
+              transition={{ duration: 5.8, delay: Number.parseFloat(item.delay), repeat: Infinity, ease: "easeInOut" }}
+              className="absolute grid h-14 w-14 place-items-center rounded-full border border-gold-light/35 bg-midnight/55 text-gold-light shadow-glow backdrop-blur-xl"
+              style={{ top: item.top, right: item.right }}
+            >
+              <Icon className="h-7 w-7" />
+            </motion.div>
+          );
+        })}
       </div>
 
       <div className="section-shell relative z-10 grid min-h-[calc(100svh-6rem)] items-center gap-8 py-10 lg:grid-cols-[1.05fr_.95fr] lg:gap-10 lg:py-12">
@@ -66,6 +71,22 @@ export default function Hero() {
             ระดับภาคกลาง ประจำปี 2569
             <span className="block font-semibold text-gold-light">สำนักการศึกษา เทศบาลเมืองราชบุรี</span>
           </p>
+          <div className="mt-5 grid max-w-2xl gap-3 sm:grid-cols-2">
+            {ratchaburiScenes.map((scene) => (
+              <div key={scene.title} className="group relative min-h-24 overflow-hidden rounded-2xl border border-gold-light/20 bg-white/10 backdrop-blur-xl">
+                <Image src={scene.image} alt={scene.title} fill sizes="(max-width: 768px) 50vw, 320px" className="object-cover opacity-40 transition duration-500 group-hover:scale-105 group-hover:opacity-55" />
+                <div className="absolute inset-0 bg-gradient-to-r from-midnight/86 via-midnight/58 to-transparent" />
+                <div className="relative p-4">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-gold/20 px-3 py-1 text-[11px] font-bold text-gold-light">
+                    <Landmark className="h-3.5 w-3.5" />
+                    ราชบุรี
+                  </div>
+                  <div className="mt-3 text-sm font-bold text-white">{scene.title}</div>
+                  <div className="mt-1 text-xs text-white/68">{scene.caption}</div>
+                </div>
+              </div>
+            ))}
+          </div>
           <div className="mt-6 flex flex-col gap-3 text-sm text-white/84 sm:flex-row sm:flex-wrap sm:items-center">
             <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2">
               <CalendarDays className="h-4 w-4 text-gold-light" />
@@ -102,6 +123,7 @@ export default function Hero() {
 
         <motion.div initial={{ opacity: 0, scale: 0.92, y: 18 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15 }} className="glass-panel relative mx-auto hidden w-full max-w-md overflow-hidden rounded-[2rem] p-5 lg:ml-auto lg:block">
           <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-gold/30 blur-3xl" />
+          <div className="shine-strip" />
           <div className="relative rounded-[1.5rem] border border-gold-light/25 bg-midnight/50 p-4">
             <div className="flex items-center justify-between gap-3">
               <div>
@@ -110,6 +132,18 @@ export default function Hero() {
               </div>
               <div className="grid h-14 w-14 place-items-center rounded-full bg-gold text-midnight shadow-glow">
                 <Trophy className="h-8 w-8" />
+              </div>
+            </div>
+            <div className="mt-5 rounded-2xl border border-gold-light/20 bg-white/10 p-4">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <div className="text-xs font-semibold uppercase tracking-[.22em] text-gold-light">Award Status</div>
+                  <div className="mt-1 text-lg font-bold text-white">รอประกาศผลการแข่งขัน</div>
+                </div>
+                <div className="relative grid h-14 w-14 place-items-center rounded-full border border-gold-light/35 bg-midnight/60">
+                  <span className="absolute h-11 w-11 animate-ping rounded-full bg-gold/20" />
+                  <Sparkles className="relative h-7 w-7 text-gold-light" />
+                </div>
               </div>
             </div>
             <div className="mt-5 grid gap-3">
