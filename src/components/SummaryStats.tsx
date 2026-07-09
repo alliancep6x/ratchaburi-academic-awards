@@ -1,12 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CalendarDays, Hourglass, School, Sparkles, Trophy, UserRoundCheck, Users } from "lucide-react";
+import { BriefcaseBusiness, CalendarDays, Hourglass, School, Sparkles, UserRoundCheck, Users } from "lucide-react";
 import { summary } from "@/data/summary";
 
 const stats = [
   { label: "โรงเรียนในสังกัด", value: summary.schoolCount, suffix: "โรงเรียน", icon: School },
-  { label: "รายการจาก PDF", value: summary.competitionCount, suffix: "รายการ", icon: Trophy },
+  { label: "บุคลากรทางการศึกษา", value: summary.educationStaffCount, suffix: "คน", icon: BriefcaseBusiness },
   { label: "นักเรียนเข้าร่วม", value: summary.studentCount, suffix: "คน", icon: Users },
   { label: "ครูและผู้ประสานงาน", value: summary.coachCount, suffix: "คน", icon: UserRoundCheck },
   { label: "รอประกาศผล", value: summary.pendingResults, suffix: "รายการ", icon: Hourglass },

@@ -8,6 +8,7 @@ const uniqueStudents = new Set(results.flatMap((result) => result.students));
 export const summary = {
   schoolCount: schools.length,
   competitionCount: competitions.length,
+  educationStaffCount: 14,
   studentCount: uniqueStudents.size,
   coachCount: uniqueCoaches.size,
   pendingResults: results.filter((result) => result.medal === "รอผล").length,
