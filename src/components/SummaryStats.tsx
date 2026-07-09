@@ -27,7 +27,9 @@ const stats = [
   { label: "วันแข่งขัน", value: summary.competitionDays, suffix: "วัน", icon: CalendarDays }
 ];
 
-const studentGroups = schools.map((school) => ({
+type RosterType = "students" | "coaches";
+
+const rosterGroups = schools.map((school) => ({
   ...school,
   students: Array.from(
     new Set(
@@ -35,11 +37,54 @@ const studentGroups = schools.map((school) => ({
         .filter((result) => result.school === school.name)
         .flatMap((result) => result.students)
     )
+  ).sort((left, right) => left.localeCompare(right, "th")),
+  coaches: Array.from(
+    new Set(
+      results
+        .filter((result) => result.school === school.name)
+        .flatMap((result) => result.coaches)
+    )
   ).sort((left, right) => left.localeCompare(right, "th"))
 }));
 
+const rosterConfigs = {
+  students: {
+    cardLabel: "นักเรียนเข้าร่วม",
+    title: "รายชื่อนักเรียน",
+    count: summary.studentCount,
+    searchPlaceholder: "ค้นหาชื่อนักเรียน",
+    totalLabel: "นักเรียนทั้งหมด",
+    emptyLabel: "ไม่พบรายชื่อนักเรียน",
+    ariaLabel: "ดูรายชื่อนักเรียนแยกตามโรงเรียน",
+    dialogLabel: "รายชื่อนักเรียนเข้าร่วมการแข่งขัน",
+    icon: Users
+  },
+  coaches: {
+    cardLabel: "ครูและผู้ประสานงาน",
+    title: "รายชื่อครูและผู้ประสานงาน",
+    count: summary.coachCount,
+    searchPlaceholder: "ค้นหาชื่อครู",
+    totalLabel: "ครูและผู้ประสานงานทั้งหมด",
+    emptyLabel: "ไม่พบรายชื่อครู",
+    ariaLabel: "ดูรายชื่อครูและผู้ประสานงานแยกตามโรงเรียน",
+    dialogLabel: "รายชื่อครูและผู้ประสานงาน",
+    icon: UserRoundCheck
+  }
+} satisfies Record<RosterType, {
+  cardLabel: string;
+  title: string;
+  count: number;
+  searchPlaceholder: string;
+  totalLabel: string;
+  emptyLabel: string;
+  ariaLabel: string;
+  dialogLabel: string;
+  icon: typeof Users;
+}>;
+
 export default function SummaryStats() {
   const [isRosterOpen, setIsRosterOpen] = useState(false);
+  const [rosterType, setRosterType] = useState<RosterType>("students");
 
   return (
     <>
@@ -47,6 +92,9 @@ export default function SummaryStats() {
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-6">
           {stats.map((stat, index) => {
             const Icon = stat.icon;
+            const interactiveRoster = Object.entries(rosterConfigs).find(
+              ([, config]) => config.cardLabel === stat.label
+            ) as [RosterType, (typeof rosterConfigs)[RosterType]] | undefined;
             const content = (
               <>
                 <div className="flex items-center justify-between gap-3">
@@ -59,7 +107,8 @@ export default function SummaryStats() {
               </>
             );
 
-            if (stat.label === "นักเรียนเข้าร่วม") {
+            if (interactiveRoster) {
+              const [nextRosterType, rosterConfig] = interactiveRoster;
               return (
                 <motion.button
                   key={stat.label}
@@ -69,9 +118,12 @@ export default function SummaryStats() {
                   whileHover={{ y: -3 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.04 }}
-                  onClick={() => setIsRosterOpen(true)}
+                  onClick={() => {
+                    setRosterType(nextRosterType);
+                    setIsRosterOpen(true);
+                  }}
                   className="glass-panel cursor-pointer rounded-2xl p-4 text-left transition hover:border-gold-light/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-light sm:rounded-3xl sm:p-5"
-                  aria-label="ดูรายชื่อนักเรียนแยกตามโรงเรียน"
+                  aria-label={rosterConfig.ariaLabel}
                 >
                   {content}
                 </motion.button>
@@ -94,22 +146,37 @@ export default function SummaryStats() {
         </div>
       </section>
 
-      <StudentRosterModal open={isRosterOpen} onClose={() => setIsRosterOpen(false)} />
+      <ParticipantRosterModal
+        open={isRosterOpen}
+        type={rosterType}
+        onClose={() => setIsRosterOpen(false)}
+      />
     </>
   );
 }
 
-function StudentRosterModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+function ParticipantRosterModal({
+  open,
+  type,
+  onClose
+}: {
+  open: boolean;
+  type: RosterType;
+  onClose: () => void;
+}) {
   const [selectedSchoolId, setSelectedSchoolId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
 
-  const selectedGroup = studentGroups.find((group) => group.id === selectedSchoolId);
-  const filteredStudents = useMemo(() => {
+  const config = rosterConfigs[type];
+  const RosterIcon = config.icon;
+  const selectedGroup = rosterGroups.find((group) => group.id === selectedSchoolId);
+  const selectedMembers = selectedGroup?.[type] ?? [];
+  const filteredMembers = useMemo(() => {
     if (!selectedGroup) return [];
     const keyword = query.trim().toLocaleLowerCase("th");
-    if (!keyword) return selectedGroup.students;
-    return selectedGroup.students.filter((student) => student.toLocaleLowerCase("th").includes(keyword));
-  }, [query, selectedGroup]);
+    if (!keyword) return selectedMembers;
+    return selectedMembers.filter((member) => member.toLocaleLowerCase("th").includes(keyword));
+  }, [query, selectedGroup, selectedMembers]);
 
   useEffect(() => {
     if (!open) {
@@ -146,7 +213,7 @@ function StudentRosterModal({ open, onClose }: { open: boolean; onClose: () => v
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-label="รายชื่อนักเรียนเข้าร่วมการแข่งขัน"
+            aria-label={config.dialogLabel}
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
@@ -168,13 +235,13 @@ function StudentRosterModal({ open, onClose }: { open: boolean; onClose: () => v
                 </button>
               ) : (
                 <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gold/15 text-gold-light">
-                  <Users className="h-5 w-5" />
+                  <RosterIcon className="h-5 w-5" />
                 </div>
               )}
 
               <div className="min-w-0 flex-1">
                 <h2 className="truncate text-lg font-bold text-white sm:text-xl">
-                  {selectedGroup ? selectedGroup.shortName : `รายชื่อนักเรียน ${summary.studentCount} คน`}
+                  {selectedGroup ? selectedGroup.shortName : `${config.title} ${config.count} คน`}
                 </h2>
                 <p className="mt-0.5 truncate text-xs text-white/55">
                   {selectedGroup ? selectedGroup.name : "เลือกโรงเรียน"}
@@ -199,35 +266,35 @@ function StudentRosterModal({ open, onClose }: { open: boolean; onClose: () => v
                     <input
                       value={query}
                       onChange={(event) => setQuery(event.target.value)}
-                      placeholder="ค้นหาชื่อนักเรียน"
+                      placeholder={config.searchPlaceholder}
                       className="h-11 w-full rounded-xl border border-white/12 bg-white/7 pl-10 pr-4 text-sm text-white outline-none placeholder:text-white/35 focus:border-gold-light/55"
                     />
                   </label>
                   <div className="mt-3 flex items-center justify-between text-xs">
-                    <span className="text-white/55">นักเรียนทั้งหมด</span>
-                    <span className="font-semibold text-gold-light">{selectedGroup.students.length} คน</span>
+                    <span className="text-white/55">{config.totalLabel}</span>
+                    <span className="font-semibold text-gold-light">{selectedMembers.length} คน</span>
                   </div>
                 </div>
 
                 <div className="min-h-0 flex-1 overflow-y-auto px-4 py-2 sm:px-6">
-                  {filteredStudents.length ? (
+                  {filteredMembers.length ? (
                     <ol className="divide-y divide-white/8">
-                      {filteredStudents.map((student, index) => (
-                        <li key={student} className="flex min-h-12 items-center gap-3 py-2.5 text-sm text-white/85">
+                      {filteredMembers.map((member, index) => (
+                        <li key={member} className="flex min-h-12 items-center gap-3 py-2.5 text-sm text-white/85">
                           <span className="w-8 shrink-0 text-right tabular-nums text-white/35">{index + 1}</span>
-                          <span className="min-w-0 leading-6">{student}</span>
+                          <span className="min-w-0 leading-6">{member}</span>
                         </li>
                       ))}
                     </ol>
                   ) : (
-                    <div className="grid min-h-48 place-items-center text-sm text-white/45">ไม่พบรายชื่อ</div>
+                    <div className="grid min-h-48 place-items-center text-sm text-white/45">{config.emptyLabel}</div>
                   )}
                 </div>
               </>
             ) : (
               <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">
                 <div className="overflow-hidden rounded-2xl border border-white/10">
-                  {studentGroups.map((group) => (
+                  {rosterGroups.map((group) => (
                     <button
                       key={group.id}
                       type="button"
@@ -242,7 +309,7 @@ function StudentRosterModal({ open, onClose }: { open: boolean; onClose: () => v
                         <div className="mt-1 truncate text-xs text-white/50">{group.name}</div>
                       </div>
                       <div className="shrink-0 text-right">
-                        <div className="text-lg font-bold text-white">{group.students.length}</div>
+                        <div className="text-lg font-bold text-white">{group[type].length}</div>
                         <div className="text-xs text-white/45">คน</div>
                       </div>
                     </button>
