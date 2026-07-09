@@ -265,7 +265,7 @@ function ResultDetails({ result }: { result: (typeof results)[number] }) {
   return (
     <div className="grid gap-4 rounded-2xl border border-white/10 bg-white/8 p-4 text-sm text-white/72 md:grid-cols-4">
       <DetailBlock title="รายชื่อนักเรียน" lines={result.students.length ? result.students : ["ไม่มีข้อมูล"]} />
-      <DetailBlock title="ครูผู้ฝึกสอน" lines={result.coaches.length ? result.coaches : ["ไม่มีข้อมูล"]} />
+      <DetailBlock title="ครูผู้ฝึกสอน / ผู้ประสานงาน" lines={result.coaches.length ? result.coaches : ["ไม่มีข้อมูล"]} />
       <DetailBlock title="สถานที่แข่งขัน" lines={[result.venue]} />
       <div>
         <div className="mb-2 font-semibold text-gold-light">รูปภาพ</div>

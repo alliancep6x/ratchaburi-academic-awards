@@ -8,7 +8,7 @@ const stats = [
   { label: "โรงเรียนในสังกัด", value: summary.schoolCount, suffix: "โรงเรียน", icon: School },
   { label: "รายการจาก PDF", value: summary.competitionCount, suffix: "รายการ", icon: Trophy },
   { label: "นักเรียนเข้าร่วม", value: summary.studentCount, suffix: "คน", icon: Users },
-  { label: "ครูผู้ฝึกสอน", value: summary.coachCount, suffix: "คน", icon: UserRoundCheck },
+  { label: "ครูและผู้ประสานงาน", value: summary.coachCount, suffix: "คน", icon: UserRoundCheck },
   { label: "รอประกาศผล", value: summary.pendingResults, suffix: "รายการ", icon: Hourglass },
   { label: "วันแข่งขัน", value: summary.competitionDays, suffix: "วัน", icon: CalendarDays }
 ];
