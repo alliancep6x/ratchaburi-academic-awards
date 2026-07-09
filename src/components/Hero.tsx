@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { CalendarDays, ChevronRight, Crown, Hourglass, Megaphone, Medal, Sparkles, Star, Trophy } from "lucide-react";
 import { results } from "@/data/results";
+import { schools } from "@/data/schools";
 import { summary } from "@/data/summary";
 
 const sparkles = [
@@ -45,11 +47,17 @@ const medalOverview = [
 
 const announcedCount = summary.goldMedals + summary.silverMedals + summary.bronzeMedals + summary.otherAwards;
 
-const announcementItems = ["คัดลายมือ", "ฮูลาฮูปประกอบเพลง", "กล่าวสุนทรพจน์", "หุ่นยนต์", "โครงงานวิทยาศาสตร์", "รำวงมาตรฐาน"].map((event) => {
-  const announcedResult = results.find((result) => result.event.includes(event) && result.medal !== "รอผล");
+const schoolShortNames = new Map(schools.map((school) => [school.name, school.shortName]));
+
+const announcementItems = results.map((result) => {
+  const isPending = result.medal === "รอผล";
   return {
-    event,
-    status: announcedResult ? announcedResult.award : "รอประกาศผล"
+    id: result.id,
+    event: result.event,
+    school: schoolShortNames.get(result.school) ?? result.school,
+    level: result.level,
+    status: isPending ? "รอประกาศผล" : result.award,
+    badge: isPending ? "WAIT" : result.medal
   };
 });
 
@@ -110,11 +118,15 @@ export default function Hero() {
             <span className="block font-semibold text-gold-light">สำนักการศึกษา เทศบาลเมืองราชบุรี</span>
           </p>
           <div className="mt-5 overflow-hidden rounded-full border border-gold-light/25 bg-midnight/55 px-3 py-2 backdrop-blur-xl">
-            <div className="marquee-track flex w-max items-center gap-6 text-sm font-semibold text-white/76">
+            <div
+              className="marquee-track flex w-max items-center gap-6 text-sm font-semibold text-white/76"
+              style={{ animationDuration: `${Math.max(90, announcementItems.length * 2.5)}s` }}
+            >
               {[...announcementItems, ...announcementItems].map((item, index) => (
-                <span key={`${item.event}-${index}`} className="inline-flex items-center gap-2">
+                <span key={`${item.id}-${index}`} className="inline-flex items-center gap-2">
                   <Megaphone className="h-4 w-4 text-gold-light" />
                   {item.event}
+                  <span className="text-white/45">{item.school} • {item.level}</span>
                   <span className="text-gold-light">{item.status}</span>
                 </span>
               ))}
@@ -211,26 +223,81 @@ export default function Hero() {
               </div>
             </div>
 
-            <div className="mt-5 grid gap-3">
-              {announcementItems.slice(0, 3).map((item) => (
-                <div key={item.event} className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/10 p-4 transition hover:-translate-y-0.5 hover:border-gold-light/40">
-                  <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-gold-light to-transparent opacity-0 transition group-hover:opacity-100" />
-                  <div className="absolute right-4 top-4 rounded-full border border-gold-light/30 bg-gold/15 px-2 py-1 text-[10px] font-bold text-gold-light">{item.status === "รอประกาศผล" ? "WAIT" : "LIVE"}</div>
-                  <div className="flex items-center gap-3">
-                    <div className="grid h-11 w-11 place-items-center rounded-full border border-gold-light/25 bg-midnight/65 text-gold-light">
-                      <Medal className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-bold text-white">{item.event}</div>
-                      <div className="mt-1 text-xs text-white/55">{item.status}</div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <AnnouncementCarousel />
           </div>
         </motion.div>
       </div>
     </section>
+  );
+}
+
+function AnnouncementCarousel() {
+  const [startIndex, setStartIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (isPaused || prefersReducedMotion || announcementItems.length <= 3) return;
+
+    const timer = window.setInterval(() => {
+      setStartIndex((current) => (current + 1) % announcementItems.length);
+    }, 2800);
+
+    return () => window.clearInterval(timer);
+  }, [isPaused, prefersReducedMotion]);
+
+  const visibleItems = Array.from(
+    { length: Math.min(3, announcementItems.length) },
+    (_, offset) => announcementItems[(startIndex + offset) % announcementItems.length]
+  );
+
+  return (
+    <div className="mt-5">
+      <div className="mb-2 flex items-center justify-between px-1 text-[11px] text-white/45">
+        <span>รายการแข่งขันทั้งหมด</span>
+        <span className="tabular-nums">
+          {Math.min(startIndex + 1, announcementItems.length).toLocaleString("th-TH")} / {announcementItems.length.toLocaleString("th-TH")}
+        </span>
+      </div>
+      <div
+        className="grid gap-3"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        onFocusCapture={() => setIsPaused(true)}
+        onBlurCapture={() => setIsPaused(false)}
+        onTouchStart={() => setIsPaused(true)}
+        onTouchEnd={() => setIsPaused(false)}
+        aria-label="รายการแข่งขันที่เลื่อนอัตโนมัติ"
+      >
+        <AnimatePresence initial={false} mode="popLayout">
+          {visibleItems.map((item) => (
+            <motion.div
+              layout
+              key={item.id}
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -18 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+              className="group relative min-h-[6.5rem] overflow-hidden rounded-2xl border border-white/10 bg-white/10 p-4 transition hover:border-gold-light/40"
+            >
+              <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-gold-light to-transparent opacity-0 transition group-hover:opacity-100" />
+              <div className="absolute right-4 top-4 rounded-full border border-gold-light/30 bg-gold/15 px-2 py-1 text-[10px] font-bold text-gold-light">
+                {item.badge}
+              </div>
+              <div className="flex items-center gap-3 pr-14">
+                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-gold-light/25 bg-midnight/65 text-gold-light">
+                  <Medal className="h-5 w-5" />
+                </div>
+                <div className="min-w-0">
+                  <div className="truncate text-sm font-bold text-white" title={item.event}>{item.event}</div>
+                  <div className="mt-1 truncate text-[11px] text-white/45">{item.school} • {item.level}</div>
+                  <div className="mt-1 truncate text-xs text-white/60">{item.status}</div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+    </div>
   );
 }
