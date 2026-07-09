@@ -119,7 +119,7 @@ export const results: Result[] = [
     id: "r-008",
     date: "20 กรกฎาคม 2569",
     school: "โรงเรียนเทศบาล 2 (วัดช่องลม)",
-    event: "ภาษาไทย",
+    event: "โครงงานภาษาไทย",
     level: "ม.1-3",
     award: "รอผลรางวัล",
     medal: "รอผล",
